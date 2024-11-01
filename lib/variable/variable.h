@@ -15,6 +15,8 @@ public:
     [[nodiscard]] std::string toString() const override { return name; }
 
     [[nodiscard]] bool equals(const std::shared_ptr<Expression> &other) const override;
+
+    [[nodiscard]] std::shared_ptr<Expression> toImplicationForm() const override;
 };
 
 #endif // VARIABLE_H

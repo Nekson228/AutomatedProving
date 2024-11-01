@@ -15,8 +15,16 @@ set(SOURCES
         lib/implication/implication.h
         lib/negation/negation.cpp
         lib/negation/negation.h
-        lib/proof_engine/proof_engine.cpp
-        lib/proof_engine/proof_engine.h
+        src/proof_engine/proof_engine.cpp
+        src/proof_engine/proof_engine.h
+        lib/and/and.cpp
+        lib/and/and.h
+        lib/or/or.cpp
+        lib/or/or.h
+        lib/xor/xor.cpp
+        lib/xor/xor.h
+        lib/expression_factory/expression_factory.h
+        lib/expression_cast/expression_cast.h
 )
 
 add_executable(ProofSystem ${SOURCES})

@@ -1,13 +1,15 @@
-#ifndef NEGATION_H
-#define NEGATION_H
+#ifndef AND_H
+#define AND_H
 
 #include "expression/expression.h"
+#include <memory>
 
-class Negation final : public Expression {
-    std::shared_ptr<Expression> expr;
+class And final : public Expression {
+    std::shared_ptr<Expression> left;
+    std::shared_ptr<Expression> right;
 
 public:
-    explicit Negation(const std::shared_ptr<Expression> &expr);
+    And(const std::shared_ptr<Expression> &left, const std::shared_ptr<Expression> &right);
 
     [[nodiscard]] std::string toString() const override;
 
@@ -16,4 +18,4 @@ public:
     [[nodiscard]] std::shared_ptr<Expression> toImplicationForm() const override;
 };
 
-#endif // NEGATION_H
+#endif // AND_H

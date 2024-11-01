@@ -15,6 +15,8 @@ public:
     [[nodiscard]] std::string toString() const override;
 
     [[nodiscard]] bool equals(const std::shared_ptr<Expression> &other) const override;
+
+    [[nodiscard]] std::shared_ptr<Expression> toImplicationForm() const override;
 };
 
 #endif // IMPLICATION_H
