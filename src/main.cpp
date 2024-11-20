@@ -1,18 +1,38 @@
 #include <iostream>
 #include <memory>
+#include <vector>
+#include <unordered_map>
 
-#include "expression_factory/expression_factory.h"
+#include "expressions/expression_factory/expression_factory.h"
+#include "inference_rules/inference_rule/inference_rule.h"
+#include "substitution/substitution_context.h"
+#include "inference_rules/modus_ponens/modus_ponens.h"
+#include "proof/proof_engine/proof_engine.h"
 
 
 int main() {
-    const auto expr =
-            ExpressionFactory::exclusive_or(
-                ExpressionFactory::variable("A"),
-                ExpressionFactory::variable("B")
-            );
-    std::cout << expr->toString() << std::endl;
+    auto first = ExpressionFactory::implication(
+        ExpressionFactory::variable("P"),
+        ExpressionFactory::implication(
+            ExpressionFactory::variable("Q"), ExpressionFactory::variable("P")
+        )
+    );
+    auto second = ExpressionFactory::implication(
+        ExpressionFactory::variable("P"),
+        ExpressionFactory::implication(
+            ExpressionFactory::variable("Q"), ExpressionFactory::variable("R")
+        )
+    );
 
-    const auto impl_form = expr->toImplicationForm();
-    std::cout << impl_form->toString() << std::endl;
+    first->reindex(1);
+    second->reindex(2);
+
+    SubstitutionContext context;
+
+    std::cout << context.unification(second, first) << std::endl;
+
+    std::cout << context.toString();
+
+
     return 0;
 }

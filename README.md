@@ -1,5 +1,5 @@
 # AutomatedProving
-2024 ETU Math Logic coloqium.  Automated prover.
+2024 ETU Math Logic colloquium.  Automated prover.
 
 | Участник      | Задание |
 |---------------|---------|
