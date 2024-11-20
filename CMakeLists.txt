@@ -25,6 +25,8 @@ set(SOURCES
         lib/xor/xor.h
         lib/expression_factory/expression_factory.h
         lib/expression_cast/expression_cast.h
+        lib/parser/parser.cpp
+        lib/parser/parser.h
 )
 
 add_executable(ProofSystem ${SOURCES})
