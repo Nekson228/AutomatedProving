@@ -1,22 +1,39 @@
 #include <iostream>
-#include <string>
-#include "parser/parser.h"
+
+#include <memory>
+#include <vector>
+#include <unordered_map>
+
+#include "expressions/expression_factory/expression_factory.h"
+#include "inference_rules/inference_rule/inference_rule.h"
+#include "substitution/substitution_context.h"
+#include "inference_rules/modus_ponens/modus_ponens.h"
+#include "proof/proof_engine/proof_engine.h"
+
 
 int main() {
-    std::string input;
-    std::cout << "Введите логическое выражение: ";
-    std::getline(std::cin, input);
+    auto first = ExpressionFactory::implication(
+        ExpressionFactory::variable("P"),
+        ExpressionFactory::implication(
+            ExpressionFactory::variable("Q"), ExpressionFactory::variable("P")
+        )
+    );
+    auto second = ExpressionFactory::implication(
+        ExpressionFactory::variable("P"),
+        ExpressionFactory::implication(
+            ExpressionFactory::variable("Q"), ExpressionFactory::variable("R")
+        )
+    );
 
-    try {
-        Parser parser(input);
-        const auto expr = parser.parseExpression();
-        std::cout << "Исходное выражение: " << expr->toString() << std::endl;
+    first->reindex(1);
+    second->reindex(2);
 
-        const auto impl_form = expr->toImplicationForm();
-        std::cout << "Импликационная форма: " << impl_form->toString() << std::endl;
-    } catch (const std::exception &e) {
-        std::cerr << "Ошибка: " << e.what() << std::endl;
-    }
+    SubstitutionContext context;
+
+    std::cout << context.unification(second, first) << std::endl;
+
+    std::cout << context.toString();
+
 
     return 0;
 }
