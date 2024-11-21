@@ -9,7 +9,7 @@ std::shared_ptr<Expression> Parser::parseExpression() {
     auto expr = parseImplies();
     skipWhitespace();
     if (pos != input.size() && peek() != ')') {
-        throw std::runtime_error("Неожиданный символ: " + std::string(1, peek()));
+        throw std::runtime_error("An unexpected symbol:" + std::string(1, peek()));
     }
     return expr;
 }
@@ -36,7 +36,7 @@ std::shared_ptr<Expression> Parser::parseVariable() {
         auto expr = parseExpression();
         skipWhitespace();
         if (peek() != ')') {
-            throw std::runtime_error("Ожидалась закрывающая скобка");
+            throw std::runtime_error("A closing parenthesis was expected");
         }
         get();
         return expr;
@@ -45,7 +45,7 @@ std::shared_ptr<Expression> Parser::parseVariable() {
         std::string name(1, get());
         return ExpressionFactory::variable(name);
     }
-    throw std::runtime_error("Ожидалась переменная или открывающая скобка");
+    throw std::runtime_error("A variable or an opening parenthesis was expected");
 }
 
 
