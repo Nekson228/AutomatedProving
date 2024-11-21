@@ -8,11 +8,12 @@ Parser::Parser(const std::string &input) : input(input) {}
 std::shared_ptr<Expression> Parser::parseExpression() {
     auto expr = parseImplies();
     skipWhitespace();
-    if (pos != input.size()) {
+    if (pos != input.size() && peek() != ')') {
         throw std::runtime_error("Неожиданный символ: " + std::string(1, peek()));
     }
     return expr;
 }
+
 
 char Parser::peek() const {
     return (pos < input.size()) ? input[pos] : '\0';
@@ -30,12 +31,23 @@ void Parser::skipWhitespace() {
 
 std::shared_ptr<Expression> Parser::parseVariable() {
     skipWhitespace();
+    if (peek() == '(') {
+        get();
+        auto expr = parseExpression();
+        skipWhitespace();
+        if (peek() != ')') {
+            throw std::runtime_error("Ожидалась закрывающая скобка");
+        }
+        get();
+        return expr;
+    }
     if (isalpha(peek())) {
         std::string name(1, get());
         return ExpressionFactory::variable(name);
     }
-    throw std::runtime_error("Ожидалась переменная");
+    throw std::runtime_error("Ожидалась переменная или открывающая скобка");
 }
+
 
 std::shared_ptr<Expression> Parser::parseNegation() {
     skipWhitespace();
@@ -43,7 +55,7 @@ std::shared_ptr<Expression> Parser::parseNegation() {
         get();
         return ExpressionFactory::negation(parseNegation());
     }
-    return parseVariable(); // Если не отрицание, ожидаем переменную
+    return parseVariable();
 }
 
 std::shared_ptr<Expression> Parser::parseAnd() {
@@ -97,9 +109,9 @@ std::shared_ptr<Expression> Parser::parseEquivalent() {
     auto left = parseOr();
     skipWhitespace();
     while (peek() == '=') {
-        get();  
+        get();
         auto right = parseOr();
-        //left = ExpressionFactory::equivalent(left, right);
+        left = ExpressionFactory::equivalence(left, right);
         skipWhitespace();
     }
     return left;
