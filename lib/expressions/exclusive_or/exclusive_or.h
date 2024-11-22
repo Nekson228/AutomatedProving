@@ -13,6 +13,14 @@ public:
 
     [[nodiscard]] std::string toString() const override;
 
+    [[nodiscard]] std::shared_ptr<Expression> getLeft() const {
+        return left;
+    }
+
+    [[nodiscard]] std::shared_ptr<Expression> getRight() const {
+        return right;
+    }
+
     [[nodiscard]] bool equals(const std::shared_ptr<Expression> &other) const override;
 
     [[nodiscard]] std::shared_ptr<Expression> toImplicationNegationForm() const override;

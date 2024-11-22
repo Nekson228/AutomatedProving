@@ -41,3 +41,7 @@ bool Negation::match(const std::shared_ptr<Expression> &expression, Substitution
     const auto negation = ExpressionCast::as_negation(expression);
     return negation && expression->match(negation->expr, context);
 }
+
+std::shared_ptr<Expression> Negation::getInnerExpression() const {
+    return expr;
+}
