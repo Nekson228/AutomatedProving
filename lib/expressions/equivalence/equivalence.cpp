@@ -20,17 +20,19 @@ std::shared_ptr<Expression> Equivalence::toImplicationNegationForm() const {
     )->toImplicationNegationForm();
 }
 
-std::shared_ptr<Expression> Equivalence::substitute(
-    SubstitutionContext &context) const {
-    return std::make_shared<Equivalence>(left->substitute(context), right->substitute(context));
+bool Equivalence::match(const std::shared_ptr<Expression> &expression, SubstitutionContext &context) const {
+    const auto equivalence = ExpressionCast::as_equivalence(expression);
+    return equivalence && left->match(equivalence->left, context) && right->match(equivalence->right, context);
+}
+
+std::shared_ptr<Expression> Equivalence::substitute(SubstitutionContext &context) const {
+    return ExpressionFactory::equivalence(left->substitute(context), right->substitute(context));
 }
 
 void Equivalence::reindex(const int id) {
     left->reindex(id), right->reindex(id);
 }
 
-bool Equivalence::match(const std::shared_ptr<Expression> &expression,
-                        SubstitutionContext &context) const {
-    const auto equivalence = ExpressionCast::as_equivalence(expression);
-    return equivalence && left->match(equivalence->left, context) && right->match(equivalence->right, context);
+std::shared_ptr<Expression> Equivalence::clone() const {
+    return ExpressionFactory::equivalence(left->clone(), right->clone());
 }

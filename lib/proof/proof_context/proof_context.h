@@ -1,33 +1,43 @@
 #ifndef PROOF_CONTEXT_H
 #define PROOF_CONTEXT_H
 
-#include "expressions/expression/expression.h"
-#include "axiom/axiom_scheme/axiom_scheme.h"
-
 #include <unordered_set>
 #include <vector>
 #include <memory>
 #include <string>
 
+#include "expressions/expression/expression.h"
+#include "proof/proof_logger/proof_logger.h"
+
+#include "inference_rules/inference_conclusion/inference_conclusion.h"
+
+using EnumeratedExpression = std::pair<int, std::shared_ptr<Expression> >;
+
 class ProofContext {
+    bool updated = false;
+    bool is_target_reached = false;
+
 public:
-    std::vector<std::shared_ptr<Expression> > known;
+    std::vector<EnumeratedExpression> known;
     std::unordered_set<std::string> visited;
     std::shared_ptr<Expression> target;
-    bool updated = false;
+
+    ProofLogger logger;
+
+    int current_step = 0;
 
     explicit ProofContext(const std::vector<std::shared_ptr<Expression> > &axioms,
-                          const std::shared_ptr<Expression> &target)
-        : known(axioms), target(target) {
-    }
+                          const std::shared_ptr<Expression> &target);
 
-    bool addConclusionIfNew(const std::shared_ptr<Expression> &conclusion);
+    bool addConclusionIfNew(const InferenceConclusion &conclusion);
 
-    bool isTargetReached(const std::shared_ptr<Expression> &conclusion) const;
+    bool isTargetReached(const EnumeratedExpression &conclusion);
 
     void markUpdated(const bool state) { updated = state; }
 
     bool hasUpdates() const { return updated; }
+
+    const ProofLogger &getLogger() const { return logger; }
 };
 
 #endif // PROOF_CONTEXT_H

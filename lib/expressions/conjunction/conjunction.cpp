@@ -27,17 +27,19 @@ std::shared_ptr<Expression> Conjunction::toImplicationNegationForm() const {
     );
 }
 
-std::shared_ptr<Expression> Conjunction::substitute(
-    SubstitutionContext &context) const {
-    return std::make_shared<Conjunction>(left->substitute(context), right->substitute(context));
+std::shared_ptr<Expression> Conjunction::substitute(SubstitutionContext &context) const {
+    return ExpressionFactory::conjunction(left->substitute(context), right->substitute(context));
 }
 
 void Conjunction::reindex(const int id) {
     left->reindex(id), right->reindex(id);
 }
 
-bool Conjunction::match(const std::shared_ptr<Expression> &expression,
-                        SubstitutionContext &context) const {
+std::shared_ptr<Expression> Conjunction::clone() const {
+    return ExpressionFactory::conjunction(left->clone(), right->clone());
+}
+
+bool Conjunction::match(const std::shared_ptr<Expression> &expression, SubstitutionContext &context) const {
     const auto conjunction = ExpressionCast::as_conjunction(expression);
     return conjunction && left->match(conjunction->left, context) && right->match(conjunction->right, context);
 }

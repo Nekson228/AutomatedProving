@@ -23,6 +23,8 @@ public:
     [[nodiscard]] std::shared_ptr<Expression> substitute(SubstitutionContext &context) const override;
 
     void reindex(int id) override;
+
+    [[nodiscard]] std::shared_ptr<Expression> clone() const override;
 };
 
 #endif // AND_H

@@ -1,41 +1,51 @@
 #include "modus_ponens.h"
 
-#include <algorithm>
-
 #include "expressions/implication/implication.h"
 #include "expressions/expression_cast/expression_cast.h"
 
+#include "substitution/substitution_context.h"
+
 #include <memory>
 
-std::vector<std::shared_ptr<Expression> > ModusPonens::apply(
-    const std::vector<std::shared_ptr<Expression> > &knownStatements) const {
-    std::vector<std::shared_ptr<Expression> > conclusions;
+std::vector<InferenceConclusion> ModusPonens::apply(
+    const std::vector<EnumeratedExpression> &knownStatements) const {
+    std::vector<InferenceConclusion> conclusions;
     auto implications = findImplications(knownStatements);
 
     for (const auto &implication: implications)
-        if (matchesAntecedent(implication, knownStatements))
-            addConclusions(conclusions, implication);
+        addMatchingConclusions(implication, knownStatements, conclusions);
     return conclusions;
 }
 
 
-std::vector<std::shared_ptr<Implication> > ModusPonens::findImplications(
-    const std::vector<std::shared_ptr<Expression> > &statements) {
-    std::vector<std::shared_ptr<Implication> > implications;
-    for (const auto &statement: statements) {
-        if (const auto implication = ExpressionCast::as_implication(statement)) {
-            implications.push_back(implication);
+std::vector<EnumeratedImplication> ModusPonens::findImplications(
+    const std::vector<EnumeratedExpression> &statements) {
+    std::vector<EnumeratedImplication> implications;
+    for (const auto &[id, expression]: statements) {
+        if (const auto implication = ExpressionCast::as_implication(expression)) {
+            implications.emplace_back(id, implication);
         }
     }
     return implications;
 }
 
-bool ModusPonens::matchesAntecedent(const std::shared_ptr<Implication> &implication,
-                                    const std::vector<std::shared_ptr<Expression> > &statements) {
-    return std::find(statements.begin(), statements.end(), implication->getAntecedent()) != statements.end();
-}
+void ModusPonens::addMatchingConclusions(const EnumeratedImplication &implication,
+                                         const std::vector<EnumeratedExpression> &statements,
+                                         std::vector<InferenceConclusion> &conclusions) const {
+    SubstitutionContext context;
+    for (const auto &[id, statement]: statements) {
+        if (id == implication.first || usedPairs.find(std::make_pair(id, implication.first)) != usedPairs.end())
+            continue;
+        usedPairs.insert(std::make_pair(id, implication.first));
 
-void ModusPonens::addConclusions(std::vector<std::shared_ptr<Expression> > &conclusions,
-                                 const std::shared_ptr<Implication> &implication) {
-    conclusions.push_back(implication->getConsequent());
+        context.clear();
+        const bool is_unifiable = context.unification(implication.second->getAntecedent(), statement);
+        if (!is_unifiable)
+            continue;
+
+        const auto unified = ExpressionCast::as_implication(context.substituteIn(implication.second));
+
+        conclusions.push_back(createConclusion(unified->getConsequent(), std::vector{implication.first, id},
+                                               context.toString()));
+    }
 }

@@ -2,38 +2,28 @@
 
 #include <memory>
 #include <vector>
-#include <unordered_map>
 
-#include "expressions/expression_factory/expression_factory.h"
-#include "inference_rules/inference_rule/inference_rule.h"
-#include "substitution/substitution_context.h"
+#include "parser/parser.h"
 #include "inference_rules/modus_ponens/modus_ponens.h"
 #include "proof/proof_engine/proof_engine.h"
-
+#include "proof/proof_context/proof_context.h"
 
 int main() {
-    auto first = ExpressionFactory::implication(
-        ExpressionFactory::variable("P"),
-        ExpressionFactory::implication(
-            ExpressionFactory::variable("Q"), ExpressionFactory::variable("P")
-        )
-    );
-    auto second = ExpressionFactory::implication(
-        ExpressionFactory::variable("P"),
-        ExpressionFactory::implication(
-            ExpressionFactory::variable("Q"), ExpressionFactory::variable("R")
-        )
-    );
+    const auto a1 = Parser("a>(b>a)").parseExpression(),
+            a2 = Parser("(a>(b>c))>((a>b)>(a>c))").parseExpression(),
+            a3 = Parser("((!b>!a)>((!b>a)>b))").parseExpression();
+    const auto axioms = std::vector{a1, a2, a3};
 
-    first->reindex(1);
-    second->reindex(2);
+    const auto target = Parser("a>a").parseExpression()->toImplicationNegationForm();
 
-    SubstitutionContext context;
+    std::cout << "Target: " << target->toString() << std::endl;
 
-    std::cout << context.unification(second, first) << std::endl;
+    ProofContext context(axioms, target);
+    const ProofEngine engine(axioms, {std::make_shared<ModusPonens>()});
 
-    std::cout << context.toString();
+    std::cout << (engine.prove(context) ? ":)" : ":(") << std::endl;
 
+    context.getLogger().printUsedTheorems(std::cout);
 
     return 0;
 }

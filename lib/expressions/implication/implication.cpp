@@ -19,17 +19,19 @@ std::shared_ptr<Expression> Implication::toImplicationNegationForm() const {
     );
 }
 
-std::shared_ptr<Expression> Implication::substitute(
-    SubstitutionContext &context) const {
-    return std::make_shared<Implication>(left->substitute(context), right->substitute(context));
+std::shared_ptr<Expression> Implication::substitute(SubstitutionContext &context) const {
+    return ExpressionFactory::implication(left->substitute(context), right->substitute(context));
 }
 
 void Implication::reindex(const int id) {
     left->reindex(id), right->reindex(id);
 }
 
-bool Implication::match(const std::shared_ptr<Expression> &expression,
-                        SubstitutionContext &context) const {
+std::shared_ptr<Expression> Implication::clone() const {
+    return ExpressionFactory::implication(left->clone(), right->clone());
+}
+
+bool Implication::match(const std::shared_ptr<Expression> &expression, SubstitutionContext &context) const {
     const auto implication = ExpressionCast::as_implication(expression);
     return implication && left->match(implication->left, context) && right->match(implication->right, context);
 }

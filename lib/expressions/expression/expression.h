@@ -22,6 +22,8 @@ public:
     [[nodiscard]] virtual std::shared_ptr<Expression> substitute(SubstitutionContext &context) const = 0;
 
     virtual void reindex(int id) = 0;
+
+    [[nodiscard]] virtual std::shared_ptr<Expression> clone() const = 0;
 };
 
 #endif // EXPRESSION_H

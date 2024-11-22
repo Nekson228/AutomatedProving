@@ -25,18 +25,19 @@ std::shared_ptr<Expression> Negation::toImplicationNegationForm() const {
     );
 }
 
-
-std::shared_ptr<Expression> Negation::substitute(
-    SubstitutionContext &context) const {
-    return std::make_shared<Negation>(expr->substitute(context));
+std::shared_ptr<Expression> Negation::substitute(SubstitutionContext &context) const {
+    return ExpressionFactory::negation(expr->substitute(context));
 }
 
 void Negation::reindex(const int id) {
     expr->reindex(id);
 }
 
-bool Negation::match(const std::shared_ptr<Expression> &expression,
-                     SubstitutionContext &context) const {
+std::shared_ptr<Expression> Negation::clone() const {
+    return ExpressionFactory::negation(expr->clone());
+}
+
+bool Negation::match(const std::shared_ptr<Expression> &expression, SubstitutionContext &context) const {
     const auto negation = ExpressionCast::as_negation(expression);
     return negation && expression->match(negation->expr, context);
 }

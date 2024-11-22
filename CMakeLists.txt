@@ -29,12 +29,16 @@ set(SOURCES
         lib/inference_rules/modus_ponens/modus_ponens.h
         lib/proof/proof_context/proof_context.cpp
         lib/proof/proof_context/proof_context.h
-        lib/axiom/axiom_scheme/axiom_scheme.cpp
-        lib/axiom/axiom_scheme/axiom_scheme.h
         lib/substitution/substitution_context.cpp
         lib/substitution/substitution_context.h
         lib/expressions/equivalence/equivalence.cpp
         lib/expressions/equivalence/equivalence.h
+        lib/proof/proof_logger/proof_logger.cpp
+        lib/proof/proof_logger/proof_logger.h
+        lib/proof/proof_logger/log_entity.h
+        lib/inference_rules/inference_conclusion/inference_conclusion.h
+        lib/parser/parser.cpp
+        lib/inference_rules/inference_rule/inference_rule.cpp
 )
 
 add_executable(ProofSystem ${SOURCES})

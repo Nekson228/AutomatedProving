@@ -17,13 +17,14 @@ public:
 
     [[nodiscard]] std::shared_ptr<Expression> toImplicationNegationForm() const override;
 
-    bool match(const std::shared_ptr<Expression> &expression,
-               SubstitutionContext &context) const override;
+    bool match(const std::shared_ptr<Expression> &expression, SubstitutionContext &context) const override;
 
     [[nodiscard]] std::shared_ptr<Expression> substitute(
         SubstitutionContext &context) const override;
 
     void reindex(int id) override;
+
+    [[nodiscard]] std::shared_ptr<Expression> clone() const override;
 };
 
 #endif // XOR_H

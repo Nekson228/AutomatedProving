@@ -35,6 +35,10 @@ void Disjunction::reindex(const int id) {
     left->reindex(id), right->reindex(id);
 }
 
+std::shared_ptr<Expression> Disjunction::clone() const {
+    return ExpressionFactory::disjunction(left->clone(), right->clone());
+}
+
 bool Disjunction::match(const std::shared_ptr<Expression> &expression,
                         SubstitutionContext &context) const {
     const auto disjunction = ExpressionCast::as_disjunction(expression);

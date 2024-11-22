@@ -14,7 +14,7 @@ class SubstitutionContext {
 public:
     [[nodiscard]] std::string toString() const;
 
-    bool add_if_possible(const std::string &name, const std::shared_ptr<Expression> &expr);
+    bool addIfPossible(const std::string &name, const std::shared_ptr<Expression> &expr);
 
     void clear() { mapping.clear(); }
 
@@ -22,7 +22,7 @@ public:
 
     [[nodiscard]] std::shared_ptr<Expression> get(const std::string &name) const { return mapping.at(name); }
 
-    [[nodiscard]] std::shared_ptr<Expression> apply(const std::shared_ptr<Expression> &expr);
+    [[nodiscard]] std::shared_ptr<Expression> substituteIn(const std::shared_ptr<Expression> &expr);
 
     [[nodiscard]] bool unification(const std::shared_ptr<Expression> &expr1,
                                    const std::shared_ptr<Expression> &expr2);

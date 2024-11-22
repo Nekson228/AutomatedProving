@@ -1,27 +1,36 @@
 #include "substitution_context.h"
 
-bool SubstitutionContext::add_if_possible(const std::string &name, const std::shared_ptr<Expression> &expr) {
+#include <sstream>
+
+bool SubstitutionContext::addIfPossible(const std::string &name, const std::shared_ptr<Expression> &expr) {
     const auto it = mapping.find(name);
     if (it != mapping.end()) {
         return it->second->equals(expr);
     }
-    mapping[name] = expr;
+    mapping[name] = expr->clone();
     return true;
 }
 
-std::shared_ptr<Expression> SubstitutionContext::apply(const std::shared_ptr<Expression> &expr) {
+std::shared_ptr<Expression> SubstitutionContext::substituteIn(const std::shared_ptr<Expression> &expr) {
     return expr->substitute(*this);
 }
 
 bool SubstitutionContext::unification(const std::shared_ptr<Expression> &expr1,
                                       const std::shared_ptr<Expression> &expr2) {
-    return expr1->match(expr2, *this);
+    if (expr1->match(expr2, *this))
+        return true;
+    clear();
+    return expr2->match(expr1, *this);
 }
 
 std::string SubstitutionContext::toString() const {
-    std::string result;
-    for (const auto &[name, expr]: mapping) {
-        result += name + " -> " + expr->toString() + "\n";
+    std::stringstream ss;
+    ss << '{';
+    for (auto it = mapping.begin(); it != mapping.end(); ++it) {
+        ss << it->first << " -> " << it->second->toString();
+        if (std::next(it) != mapping.end())
+            ss << "; ";
     }
-    return result;
+    ss << '}';
+    return ss.str();
 }

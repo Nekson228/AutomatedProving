@@ -17,6 +17,10 @@ namespace ExpressionFactory {
         return std::make_shared<Variable>(name);
     }
 
+    inline std::shared_ptr<Expression> variable(const std::string &name, const std::string &id) {
+        return std::make_shared<Variable>(name, id);
+    }
+
     inline std::shared_ptr<Expression> implication(const std::shared_ptr<Expression> &left,
                                                    const std::shared_ptr<Expression> &right) {
         return std::make_shared<Implication>(left, right);

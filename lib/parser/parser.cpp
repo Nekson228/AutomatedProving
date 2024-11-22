@@ -1,26 +1,29 @@
 #include "parser.h"
 #include <cctype>
 #include <stdexcept>
-#include "expression_factory/expression_factory.h"
+#include <utility>
 
-Parser::Parser(const std::string &input) : input(input) {}
+#include "expressions/expression_factory/expression_factory.h"
+
+Parser::Parser(std::string input) : input(std::move(input)) {
+}
 
 std::shared_ptr<Expression> Parser::parseExpression() {
     auto expr = parseImplies();
     skipWhitespace();
     if (pos != input.size() && peek() != ')') {
-        throw std::runtime_error("An unexpected symbol:" + std::string(1, peek()));
+        throw std::runtime_error("An unexpected symbol: '" + std::string(1, peek()) + "' at #" + std::to_string(pos));
     }
     return expr;
 }
 
 
 char Parser::peek() const {
-    return (pos < input.size()) ? input[pos] : '\0';
+    return pos < input.size() ? input[pos] : '\0';
 }
 
 char Parser::get() {
-    return (pos < input.size()) ? input[pos++] : '\0';
+    return pos < input.size() ? input[pos++] : '\0';
 }
 
 void Parser::skipWhitespace() {
@@ -42,7 +45,7 @@ std::shared_ptr<Expression> Parser::parseVariable() {
         return expr;
     }
     if (isalpha(peek())) {
-        std::string name(1, get());
+        const std::string name(1, get());
         return ExpressionFactory::variable(name);
     }
     throw std::runtime_error("A variable or an opening parenthesis was expected");
@@ -87,7 +90,7 @@ std::shared_ptr<Expression> Parser::parseImplies() {
     skipWhitespace();
     if (peek() == '>') {
         get();
-        auto right = parseImplies();
+        const auto right = parseImplies();
         return ExpressionFactory::implication(left, right);
     }
     return left;

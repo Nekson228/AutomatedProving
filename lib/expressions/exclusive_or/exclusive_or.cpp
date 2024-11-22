@@ -28,17 +28,19 @@ std::shared_ptr<Expression> ExclusiveOr::toImplicationNegationForm() const {
     return result->toImplicationNegationForm();
 }
 
-std::shared_ptr<Expression> ExclusiveOr::substitute(
-    SubstitutionContext &context) const {
-    return std::make_shared<ExclusiveOr>(left->substitute(context), right->substitute(context));
+std::shared_ptr<Expression> ExclusiveOr::substitute(SubstitutionContext &context) const {
+    return ExpressionFactory::exclusive_or(left->substitute(context), right->substitute(context));
 }
 
 void ExclusiveOr::reindex(const int id) {
     left->reindex(id), right->reindex(id);
 }
 
-bool ExclusiveOr::match(const std::shared_ptr<Expression> &expression,
-                        SubstitutionContext &context) const {
+std::shared_ptr<Expression> ExclusiveOr::clone() const {
+    return ExpressionFactory::exclusive_or(left->clone(), right->clone());
+}
+
+bool ExclusiveOr::match(const std::shared_ptr<Expression> &expression, SubstitutionContext &context) const {
     const auto exclusive_or = ExpressionCast::as_exclusive_or(expression);
     return exclusive_or && left->match(exclusive_or->left, context) && right->match(exclusive_or->right, context);
 }
