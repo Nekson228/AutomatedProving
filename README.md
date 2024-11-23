@@ -17,9 +17,9 @@
    
 $$P → Q, Q → R, ⊢ P → R$$  
 
-3. Перестановка импликаций:  
+2. Перестановка импликаций:  
 
-$$A → B \iff \neg A ∨ B \iff B ∨ \neg A \iff \neg B → \neg A$$
+$$ P → Q \iff \neg P ∨ Q \iff Q ∨ \neg P \iff \neg Q → \neg P $$
 
 ### Алгоритм
 
