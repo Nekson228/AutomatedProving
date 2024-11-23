@@ -43,7 +43,8 @@ void HypotheticSyllogism::addMatchingConclusions(const EnumeratedImplication &im
         if (!is_unifiable)
             continue;
 
-        const auto unified = ExpressionCast::as_implication(context.substituteIn(implication.second));
+        const auto unified1 = ExpressionCast::as_implication(context.substituteIn(implication.second));
+        const auto unified2 = ExpressionCast::as_implication(context.substituteIn(statement));
 
         const auto conclusion = ExpressionFactory::implication(implication.second->getAntecedent(), statement->getConsequent());
 
