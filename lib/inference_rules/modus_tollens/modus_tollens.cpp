@@ -47,7 +47,7 @@ void ModusTollens::addMatchingConclusions(const EnumeratedImplication &implicati
 
         const auto unified = ExpressionCast::as_implication(context.substituteIn(implication.second));
 
-        conclusions.push_back(createConclusion(ExpressionFactory::negation(unified->getConsequent()), std::vector{implication.first, id},
+        conclusions.push_back(createConclusion(ExpressionFactory::negation(unified->getAntecedent()), std::vector{implication.first, id},
                                                context.toString()));
     }
 }
