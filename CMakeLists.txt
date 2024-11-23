@@ -39,6 +39,14 @@ set(SOURCES
         lib/inference_rules/inference_conclusion/inference_conclusion.h
         lib/parser/parser.cpp
         lib/inference_rules/inference_rule/inference_rule.cpp
+        lib/inference_rules/modus_tollens/modus_tollens.h
+        lib/inference_rules/modus_tollens/modus_tollens.cpp
+        lib/inference_rules/disjunctive_syllogism/disjunctive_syllogism.h
+        lib/inference_rules/disjunctive_syllogism/disjunctive_syllogism.cpp
+        lib/inference_rules/hypothetic_syllogism/hypothetic_syllogism.h
+        lib/inference_rules/hypothetic_syllogism/hypothetic_syllogism.cpp
+        lib/inference_rules/separation_syllogism/separation_syllogism.h
+        lib/inference_rules/separation_syllogism/separation_syllogism.cpp
 )
 
 add_executable(ProofSystem ${SOURCES})

@@ -9,6 +9,8 @@ class Negation final : public Expression {
 public:
     explicit Negation(const std::shared_ptr<Expression> &expr);
 
+    [[nodiscard]] std::shared_ptr<Expression> getInnerExpression() const;
+
     [[nodiscard]] std::string toString() const override;
 
     [[nodiscard]] bool equals(const std::shared_ptr<Expression> &other) const override;

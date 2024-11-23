@@ -11,6 +11,14 @@ class Disjunction final : public Expression {
 public:
     Disjunction(const std::shared_ptr<Expression> &left, const std::shared_ptr<Expression> &right);
 
+    [[nodiscard]] std::shared_ptr<Expression> getLeft() const {
+        return left;
+    }
+
+    [[nodiscard]] std::shared_ptr<Expression> getRight() const {
+        return right;
+    }
+
     [[nodiscard]] std::string toString() const override;
 
     [[nodiscard]] bool equals(const std::shared_ptr<Expression> &other) const override;

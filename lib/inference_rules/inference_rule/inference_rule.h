@@ -6,10 +6,22 @@
 
 #include "expressions/expression/expression.h"
 #include "expressions/implication/implication.h"
+#include "expressions/disjunction/disjunction.h"
+#include "expressions/exclusive_or/exclusive_or.h"
 #include "inference_rules/inference_conclusion/inference_conclusion.h"
 
 using EnumeratedExpression = std::pair<int, std::shared_ptr<Expression> >;
 using EnumeratedImplication = std::pair<int, std::shared_ptr<Implication> >;
+using EnumeratedDisjunction = std::pair<int, std::shared_ptr<Disjunction> >;
+using EnumeratedExclusiveOr = std::pair<int, std::shared_ptr<ExclusiveOr> >;
+
+
+
+struct pair_hash {
+    std::size_t operator()(const std::pair<int, int> &v) const {
+        return v.first * 31 + v.second;
+    }
+};
 
 class InferenceRule {
     [[nodiscard]] virtual std::string getCodeName() const = 0;
