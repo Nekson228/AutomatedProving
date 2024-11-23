@@ -7,8 +7,7 @@
 
 #include <memory>
 
-std::vector<InferenceConclusion> ModusPonens::apply(
-    const std::vector<EnumeratedExpression> &knownStatements) const {
+std::vector<InferenceConclusion> ModusPonens::apply(const std::vector<EnumeratedExpression> &knownStatements) const {
     std::vector<InferenceConclusion> conclusions;
     auto implications = findImplications(knownStatements);
 

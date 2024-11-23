@@ -27,7 +27,7 @@ std::string SubstitutionContext::toString() const {
     std::stringstream ss;
     ss << '{';
     for (auto it = mapping.begin(); it != mapping.end(); ++it) {
-        ss << it->first << " -> " << it->second->toString();
+        ss << it->first << " := " << it->second->toString();
         if (std::next(it) != mapping.end())
             ss << "; ";
     }

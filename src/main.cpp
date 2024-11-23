@@ -14,7 +14,8 @@ int main() {
             a3 = Parser("((!b>!a)>((!b>a)>b))").parseExpression();
     const auto axioms = std::vector{a1, a2, a3};
 
-    const auto target = Parser("a>a").parseExpression()->toImplicationNegationForm();
+    const auto target = Parser("A>A").parseExpression()->
+            toImplicationNegationForm();
 
     std::cout << "Target: " << target->toString() << std::endl;
 
